@@ -1,5 +1,7 @@
 ﻿package audioapi {
 
+    import flash.events.SampleDataEvent;
+
     public class AudioNode {
         public static const BUFFER_SIZE:uint = 8192;
 
@@ -23,14 +25,14 @@
             }
         }
 
-        public function input(inputL:Number = 0.0, inputR:Number = 0.0):void {
-            this.output(inputL, inputR);
+        public function input(event:SampleDataEvent, inputL:Number = 0.0, inputR:Number = 0.0):void {
+            this.output(event, inputL, inputR);
         }
 
-        public function output(outputL:Number = 0.0, outputR:Number = 0.0):void {
+        public function output(event:SampleDataEvent, outputL:Number = 0.0, outputR:Number = 0.0):void {
             for (var i:uint = 0, len = this.outputs.length; i < len; i++) {
                 if (this.outputs[i] is AudioNode) {
-                    this.outputs[i].input(outputL, outputR);
+                    this.outputs[i].input(event, outputL, outputR);
                 }
             }
         }

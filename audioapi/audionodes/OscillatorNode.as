@@ -87,9 +87,7 @@
                         break;
                 }
 
-                this.output(output, output);
-                event.data.writeFloat(0);
-                event.data.writeFloat(0);
+                this.output(event, output, output);
 
                 n++;
 
