@@ -8,17 +8,17 @@
     import audioapi.AudioParam;
 
     public class OscillatorNode extends AudioNode {
-        private var sound:Sound          = null;
-        private var channel:SoundChannel = null;
+        private var _sound:Sound          = null;
+        private var _channel:SoundChannel = null;
 
-        private var sampleRate:uint = 441000;
+        private var _sampleRate:uint = 441000;
 
         private var _type:String          = 'sine';
         private var _frequency:AudioParam = new AudioParam();
         private var _detune:AudioParam    = new AudioParam();
 
         public function OscillatorNode(sampleRate:uint) {
-            this.sampleRate = sampleRate;
+            this._sampleRate = sampleRate;
 
             this._frequency.value        = 440;
             this._frequency.defaultValue = 440;
@@ -28,14 +28,14 @@
         }
 
         public function start():void {
-            this.sound = new Sound();
+            this._sound = new Sound();
 
-            this.sound.addEventListener(SampleDataEvent.SAMPLE_DATA, this.onaudioprocess, false, 0, true);
-            this.channel = this.sound.play();
+            this._sound.addEventListener(SampleDataEvent.SAMPLE_DATA, this.onaudioprocess, false, 0, true);
+            this._channel = this._sound.play();
         }
 
         public function stop():void {
-            this.channel.stop();
+            this._channel.stop();
         }
 
         public function get type():String {
@@ -59,16 +59,21 @@
             return this._frequency;
         }
 
+        public function get detune():AudioParam {
+            return this._detune;
+        }
+
         private function onaudioprocess(event:SampleDataEvent):void {
-            var t0 = this.sampleRate / this._frequency.value;
-            var n  = 0;
+            var f:Number  = this._frequency.value + ((this._detune.value / 100) * Math.pow(2, (1 / 12)));
+            var t0:Number = this._sampleRate / f;
+            var n:uint    = 0;
 
             for (var i:uint = 0; i < AudioNode.BUFFER_SIZE; i++) {
                 var output:Number = 0;
 
                 switch (this._type) {
                     case 'sine' :
-                        output = Math.sin((2 * Math.PI * this._frequency.value * n) / this.sampleRate);
+                        output = Math.sin((2 * Math.PI * f * n) / this._sampleRate);
                         break;
                     case 'square' :
                         output = (n < (t0 / 2)) ? 1 : -1;
