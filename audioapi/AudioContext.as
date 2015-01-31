@@ -7,17 +7,29 @@
 
     public class AudioContext extends Sprite {
 
-        public var destination:AudioDestinationNode = new AudioDestinationNode();
+        private var _destination:AudioDestinationNode = new AudioDestinationNode();
 
-        public var sampleRate:uint    = 44100;
-        public var currentTime:Number = 0;
+        private var _sampleRate:Number  = 44100;
+        private var _currentTime:Number = 0;
 
-        private var frameRate    = 30;
-        private var frameCounter = 0;
+        private var _frameRate    = 30;
+        private var _frameCounter = 0;
 
         public function AudioContext(frameRate:uint = 30) {
-            this.frameRate = frameRate;
+            this._frameRate = frameRate;
             this.addEventListener(Event.ENTER_FRAME, this.updateCurrentTime, false, 0, true);
+        }
+
+        public function get sampleRate():Number {
+            return this._sampleRate;
+        }
+
+        public function get currentTime():Number {
+            return this._currentTime
+        }
+
+        public function get destination():AudioDestinationNode {
+            return this._destination;
         }
 
         public function createOscillator():OscillatorNode {
@@ -25,9 +37,9 @@
         }
 
         private function updateCurrentTime(event:Event):void {
-            this.frameCounter++;
+            this._frameCounter++;
 
-            this.currentTime = this.frameCounter * (1 / this.frameRate);
+            this._currentTime = this._frameCounter * (1 / this._frameRate);
         }
     }
 
