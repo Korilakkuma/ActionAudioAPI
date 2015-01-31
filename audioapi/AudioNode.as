@@ -3,7 +3,7 @@
     import flash.events.SampleDataEvent;
 
     public class AudioNode {
-        public static const BUFFER_SIZE:uint = 8192;
+        public static const BUFFER_SIZE:uint = 4096;
 
         protected var inputs:Array  = [];
         protected var outputs:Array = [];
