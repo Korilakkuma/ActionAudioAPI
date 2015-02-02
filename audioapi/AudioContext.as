@@ -4,9 +4,9 @@
     import flash.events.Event;
 
     import audioapi.audionodes.OscillatorNode;
+    import audioapi.audionodes.GainNode;
 
     public class AudioContext extends Sprite {
-
         private var _destination:AudioDestinationNode = new AudioDestinationNode();
 
         private var _sampleRate:Number  = 44100;
@@ -30,6 +30,10 @@
 
         public function get destination():AudioDestinationNode {
             return this._destination;
+        }
+
+        public function createGain():GainNode {
+            return new GainNode();
         }
 
         public function createOscillator():OscillatorNode {
