@@ -2,7 +2,12 @@
 
     import flash.display.Sprite;
     import flash.events.Event;
+    import flash.utils.ByteArray;
+    import flash.media.Sound;
 
+    import audioapi.AudioNode;
+    import audioapi.AudioBuffer;
+    import audioapi.audionodes.AudioBufferSourceNode;
     import audioapi.audionodes.OscillatorNode;
     import audioapi.audionodes.GainNode;
 
@@ -16,8 +21,14 @@
         private var _frameCounter = 0;
 
         public function AudioContext(frameRate:uint = 30) {
+            var self:AudioContext = this;
+
             this._frameRate = frameRate;
-            this.addEventListener(Event.ENTER_FRAME, this.updateCurrentTime, false, 0, true);
+
+            this.addEventListener(Event.ENTER_FRAME, function(event:Event):void {
+                self._frameCounter++;
+                self._currentTime = self._frameCounter * (1 / self._frameRate);
+            }, false, 0, true);
         }
 
         public function get sampleRate():Number {
@@ -32,18 +43,26 @@
             return this._destination;
         }
 
-        public function createGain():GainNode {
-            return new GainNode();
+        public function createBufferSource():AudioBufferSourceNode {
+            return new AudioBufferSourceNode();
         }
 
         public function createOscillator():OscillatorNode {
             return new OscillatorNode(this.sampleRate);
         }
 
-        private function updateCurrentTime(event:Event):void {
-            this._frameCounter++;
+        public function createGain():GainNode {
+            return new GainNode();
+        }
 
-            this._currentTime = this._frameCounter * (1 / this._frameRate);
+        public function decodeAudioData(sound:Sound, successCallback:Function, errorCallback:Function):void {
+            var audioBuffer:AudioBuffer = new AudioBuffer(sound, AudioNode.BUFFER_SIZE, this._sampleRate);
+
+            if (audioBuffer) {
+                successCallback(audioBuffer);
+            } else {
+                errorCallback();
+            }
         }
     }
 
