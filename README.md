@@ -35,3 +35,23 @@ The instance of OscillatorNode is created by createOscillator method.
     oscillator.connect(context.destination);
     oscillator.start();
   
+### GainNode
+  
+* [GainNode](http://webaudio.github.io/web-audio-api/#the-gainnode-interface)
+  
+The instance of GainNode is created by createGain method.
+  
+    import audioapi.AudioContext;
+    import audioapi.audionodes.OscillatorNode;
+    import audioapi.audionodes.GainNode;
+
+    var context:AudioContext = new AudioContext(stage.frameRate);
+
+    var oscillator:OscillatorNode = context.createOscillator();
+    var gain:GainNode             = context.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+
+    oscillator.start();
+  
