@@ -55,3 +55,39 @@ The instance of GainNode is created by createGain method.
 
     oscillator.start();
   
+### AudioBuffer / AudioBufferSourceNode
+  
+* [AudioBuffer](http://webaudio.github.io/web-audio-api/#the-audiobuffer-interface)
+* [AudioBufferSourceNode](http://webaudio.github.io/web-audio-api/#the-audiobuffersourcenode-interface)
+  
+The instance of AudioBuffer is created by decodeAudioData method.  
+The instance of AudioBufferSourceNode is created by createBufferSource method.
+  
+    import audioapi.AudioContext;
+    import audioapi.AudioBuffer;
+    import audioapi.audionodes.AudioBufferSourceNode;
+
+    import flash.events.Event;
+    import flash.media.Sound;
+    import flash.net.URLRequest;
+
+    var context:AudioContext = new AudioContext(stage.frameRate);
+
+    var sound:Sound = new Sound();
+
+    sound.addEventListener(Event.COMPLETE, function(event:Event):void {
+        context.decodeAudioData(sound, function(audioBuffer:AudioBuffer):void {
+            var source:AudioBufferSourceNode = context.createBufferSource();
+
+            source.buffer = audioBuffer;
+
+            source.connect(context.destination);
+
+            source.start();
+
+        }, function():void {
+        });
+    }, false, 0, true);
+
+    sound.load(new URLRequest('sample.mp3'));
+  
