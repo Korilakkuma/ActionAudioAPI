@@ -10,6 +10,7 @@
     import audioapi.audionodes.AudioBufferSourceNode;
     import audioapi.audionodes.OscillatorNode;
     import audioapi.audionodes.GainNode;
+    import audioapi.audionodes.DelayNode;
 
     public class AudioContext extends Sprite {
         private var _destination:AudioDestinationNode = new AudioDestinationNode();
@@ -53,6 +54,10 @@
 
         public function createGain():GainNode {
             return new GainNode();
+        }
+
+        public function createDelay(maxDelayTime:Number = 1) {
+            return new DelayNode(maxDelayTime);
         }
 
         public function decodeAudioData(sound:Sound, successCallback:Function, errorCallback:Function):void {
