@@ -12,12 +12,12 @@
         private var _length:Number     = 0;
         private var _sampleRate:Number = 44100;
 
-        public function AudioBuffer(sound:Sound, bufferSize:Number = 8192) {
+        public function AudioBuffer(sound:Sound, bufferSize:Number = 8192, sampleRate:Number = 44100) {
             this._sound      = sound;
             this._bufferSize = bufferSize;
             this._duration   = (sound.length / (sound.bytesTotal / sound.bytesLoaded)) / 1000;
             this._length     = sound.bytesTotal;
-            this._sampleRate = this._length / this._duration;
+            this._sampleRate = sampleRate;
         }
 
         public function getChannelData(channel:uint):ByteArray {
