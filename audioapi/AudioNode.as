@@ -8,20 +8,23 @@
         protected var inputs:Array  = [];
         protected var outputs:Array = [];
 
+        protected var numberOfConnections = 0;
+        protected var numberOfOutputs     = 0;
+
         public function AudioNode() {
         }
 
         public function connect(node:AudioNode, channel:uint = 0):void {
             if (channel >= 0) {
-                this.outputs[channel] = node;
-                node.inputs[channel]  = this;
+                this.outputs.push(node);
+
+                node.numberOfConnections++;
             }
         }
 
         public function disconnect(channel:uint = 0):void {
             if (channel >= 0) {
-                this.outputs[channel].inputs[channel] = null;
-                this.outputs[channel]                 = null;
+                this.outputs = [];
             }
         }
 
