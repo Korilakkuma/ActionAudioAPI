@@ -28,55 +28,15 @@
         }
 
         public function start():void {
-            var self:OscillatorNode = this;
-
             this._sound = new Sound();
-
-            this._sound.addEventListener(SampleDataEvent.SAMPLE_DATA, function(event:SampleDataEvent):void {
-                var f:Number  = self._frequency.value + ((self._detune.value / 100) * Math.pow(2, (1 / 12)));
-                var t0:Number = self._sampleRate / f;
-                var n:uint    = 0;
-                var s:Number  = 0;
-
-                for (var i:uint = 0; i < AudioNode.BUFFER_SIZE; i++) {
-                    var output:Number = 0;
-
-                    switch (self._type) {
-                        case 'sine' :
-                            output = Math.sin((2 * Math.PI * f * n) / this._sampleRate);
-                            break;
-                        case 'square' :
-                            output = (n < (t0 / 2)) ? 1 : -1;
-                            break;
-                        case 'sawtooth' :
-                            s = 2 * n / t0;
-
-                            output = s - 1;
-                            break;
-                        case 'triangle' :
-                            s = 4 * n / t0;
-
-                            output = (n < (t0 / 2)) ? (-1 + s) : (3 - s);
-                            break;
-                        default :
-                            break;
-                    }
-
-                    self.output(event, output, output);
-
-                    n++;
-
-                    if (n >= t0) {
-                        n = 0;
-                    }
-                }
-            }, false, 0, true);
+            this._sound.addEventListener(SampleDataEvent.SAMPLE_DATA, this.onSampleDataEventListener, false, 0, true);
 
             this._channel = this._sound.play();
         }
 
         public function stop():void {
             this._channel.stop();
+            this._sound.removeEventListener(SampleDataEvent.SAMPLE_DATA, this.onSampleDataEventListener);
         }
 
         public function get type():String {
@@ -103,6 +63,47 @@
         public function get detune():AudioParam {
             return this._detune;
         }
+
+        private function onSampleDataEventListener(event:SampleDataEvent):void {
+            var f:Number  = this._frequency.value + ((this._detune.value / 100) * Math.pow(2, (1 / 12)));
+            var t0:Number = this._sampleRate / f;
+            var n:uint    = 0;
+            var s:Number  = 0;
+
+            for (var i:uint = 0; i < AudioNode.BUFFER_SIZE; i++) {
+                var output:Number = 0;
+
+                switch (this._type) {
+                    case 'sine' :
+                        output = Math.sin((2 * Math.PI * f * n) / this._sampleRate);
+                        break;
+                    case 'square' :
+                        output = (n < (t0 / 2)) ? 1 : -1;
+                        break;
+                    case 'sawtooth' :
+                        s = 2 * n / t0;
+
+                        output = s - 1;
+                        break;
+                    case 'triangle' :
+                        s = 4 * n / t0;
+
+                        output = (n < (t0 / 2)) ? (-1 + s) : (3 - s);
+                        break;
+                    default :
+                        break;
+                }
+
+                this.output(event, output, output);
+
+                n++;
+
+                if (n >= t0) {
+                    n = 0;
+                }
+            }
+        }
+
     }
 
 }
