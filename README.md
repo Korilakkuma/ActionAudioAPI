@@ -91,3 +91,8 @@ The instance of AudioBufferSourceNode is created by createBufferSource method.
 
     sound.load(new URLRequest('sample.mp3'));
   
+## License
+  
+Copyright (c) 2014 Tomohiro IKEDA (Korilakkuma)  
+Released under the MIT license
+  
